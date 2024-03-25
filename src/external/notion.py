@@ -38,9 +38,6 @@ class NotionClient:
 
         response = requests.post(url, headers=self.headers, data=json.dumps(data))
 
-        print(response.status_code)
-        print(response.json())
-
         if response.status_code == 200:
             return True
         else:
