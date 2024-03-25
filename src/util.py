@@ -14,11 +14,11 @@ notionclient = NotionClient(NOTION_TOKEN, NOTION_TODO_DATABASE_ID)
 
 class Util():
     def __init__(self) -> None:
-        engine = pyttsx3.init()
-        voices = engine.getProperty("voices")
-        engine.setProperty("voice", voices[1].id)
+        self.engine = pyttsx3.init()
+        voices = self.engine.getProperty("voices")
+        self.engine.setProperty("voice", voices[1].id)
     
-    def _speak(self, text):
+    def speak(self, text):
         self.engine.say(text)
         self.engine.runAndWait()
 
