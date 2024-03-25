@@ -1,28 +1,55 @@
 import os
+import pyttsx3
+from speech.speech import listen, audio_to_text
+from decouple import config
+from datetime import datetime
 
-def clear_downloads():
-    # Get the path to the user's Downloads directory
-    downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+from external.notion import NotionClient
 
-    # Change the current working directory to Downloads
-    os.chdir(downloads_dir)
+# Notion API
+NOTION_TOKEN = config("NOTION_TOKEN")
+NOTION_TODO_DATABASE_ID = config("NOTION_TODO_DATABASE_ID")
+notionclient = NotionClient(NOTION_TOKEN, NOTION_TODO_DATABASE_ID)
 
-    # Check the operating system
-    if os.name == 'nt':  # Windows
-        # Command to delete files in the Downloads directory recursively
-        del_files_command = "del /S /Q *.*"
 
-        # Command to remove directories in the Downloads directory recursively
-        del_dirs_command = "for /D %p in (*) do rmdir /s /q %p"
+class Util():
+    def __init__(self) -> None:
+        engine = pyttsx3.init()
+        voices = engine.getProperty("voices")
+        engine.setProperty("voice", voices[1].id)
+    
+    def _speak(self, text):
+        self.engine.say(text)
+        self.engine.runAndWait()
 
-        # Execute commands
-        os.system(del_files_command)
-        os.system(del_dirs_command)
-    else:  # Unix/Linux
-        # Command to delete files and directories in the Downloads directory recursively
-        del_files_dirs_command = "rm -rf *"
+    def create_note(self):
+        self.speak("What should I write in the note?")
+        note = listen()
+        note = audio_to_text(note)
+        
+        res = notionclient.create_page(note, datetime.now().astimezone().isoformat())
+        if res:
+            self.speak(f"I have created a new note: {note} in your Notion database.")
+        else:
+            self.speak("Failed to create note.")
 
-        # Execute command
-        os.system(del_files_dirs_command)
+    def clear_downloads(self):
+        self.speak("Clearing downloads.")
 
-    os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+        downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+        os.chdir(downloads_dir)
+
+        if os.name == 'nt':  # Windows
+            del_files_command = "del /S /Q *.*"
+            del_dirs_command = "for /D %p in (*) do rmdir /s /q %p"
+
+            os.system(del_files_command)
+            os.system(del_dirs_command)
+        else:  # Unix/Linux
+            del_files_dirs_command = "rm -rf *"
+
+            os.system(del_files_dirs_command)
+
+        os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+        self.speak("Downloads cleared.")
