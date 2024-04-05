@@ -1,5 +1,10 @@
 # Nova
 
+## What can Nova do?
+- Delete everything in your downloads folder
+- Create a note in Notion
+- Create an event in Google Calendar
+
 ## Installation
 
 ### Set up .env file
