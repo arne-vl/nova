@@ -22,12 +22,14 @@ pyasn1_modules==0.4.0
 PyAudio==0.2.14
 pyparsing==3.1.2
 pypiwin32==223
+python-dateutil==2.9.0.post0
 python-decouple==3.8
 pyttsx3==2.90
 pywin32==306
 requests==2.31.0
 requests-oauthlib==2.0.0
 rsa==4.9
+six==1.16.0
 SpeechRecognition==3.10.1
 typing_extensions==4.10.0
 uritemplate==4.1.1

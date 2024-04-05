@@ -20,6 +20,9 @@ if __name__ == "__main__":
             elif "clear my downloads" in task:
                 util.clear_downloads()
 
+            elif "create an event" in task:
+                util.create_event()
+
             else:
                 continue
 
